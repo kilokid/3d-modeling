@@ -17,21 +17,30 @@ window.addEventListener("DOMContentLoaded", () => {
 				return {timeRemaining, hours, minutes, seconds};
     }
 
-		function updateClock() {
-			const timer = getTimeRemaining();
-
-			timerHours.textContent = timer.hours;
-			timerMinutes.textContent = timer.minutes;
-			timerSeconds.textContent = timer.seconds;
-
-			if (timer.timeRemaining > 0) {
-				setTimeout(updateClock, 1000);
+		function getZero(num){
+			if (num >= 0 && num < 10) { 
+					return '0' + num;
+			} else {
+					return num;
 			}
 		}
 
-		updateClock();
+		const timer = getTimeRemaining();
+
+		timerHours.textContent = getZero(timer.hours);
+		timerMinutes.textContent = getZero(timer.minutes);
+		timerSeconds.textContent = getZero(timer.seconds);
+
+		if (timer.timeRemaining <=0) {
+			clearInterval(updateClock);
+			timerHours.textContent = '00';
+			timerMinutes.textContent = '00';
+			timerSeconds.textContent = '00';
+		}
   }
 
-	countTimer('20 October 2021');
-	
+	const updateClock = setInterval(() => {
+		countTimer('21 October 2021');
+	}, 10);
+
 });
