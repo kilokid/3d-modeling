@@ -2,12 +2,12 @@ window.addEventListener("DOMContentLoaded", () => {
   "use strict";
 
   // Timer
-  function countTimer(deadline) {
+  const countTimer = (deadline) => {
     const timerHours = document.querySelector("#timer-hours"),
       timerMinutes = document.querySelector("#timer-minutes"),
       timerSeconds = document.querySelector("#timer-seconds");
 
-    function getTimeRemaining() {
+    const getTimeRemaining = () => {
       const dateStop = new Date(deadline).getTime(),
         dateNow = new Date().getTime(),
         timeRemaining = (dateStop - dateNow) / 1000,
@@ -17,7 +17,7 @@ window.addEventListener("DOMContentLoaded", () => {
       return { timeRemaining, hours, minutes, seconds };
     }
 
-    function getZero(num) {
+    const getZero = (num) => {
       if (num >= 0 && num < 10) {
         return "0" + num;
       } else {
@@ -37,9 +37,44 @@ window.addEventListener("DOMContentLoaded", () => {
       timerMinutes.textContent = "00";
       timerSeconds.textContent = "00";
     }
-  }
+  };
 
   const updateClock = setInterval(() => {
     countTimer("21 October 2021");
   }, 10);
+
+  // menu
+  const toggleMenu = () => {
+    const btnMenu = document.querySelector('.menu');
+    const menu = document.querySelector('menu');
+    const closebtn = document.querySelector('.close-btn');
+    const menuItems = menu.querySelectorAll('ul>li');
+
+    const handlerMenu = () => {
+      menu.classList.toggle('active-menu');
+    };
+
+    btnMenu.addEventListener('click', handlerMenu);
+
+    closebtn.addEventListener('click', handlerMenu);
+
+    menuItems.forEach((elem) => elem.addEventListener('click', handlerMenu));
+  };
+
+  toggleMenu();
+
+  // popup window
+  const togglePopUp = () => {
+    const popup = document.querySelector('.popup');
+    const popupBtns = document.querySelectorAll('.popup-btn');
+    const popUpClose = document.querySelector('.popup-close');
+
+    popupBtns.forEach((elem) => {
+      elem.addEventListener('click', () => popup.style.display = 'block');
+    });
+
+    popUpClose.addEventListener('click', () => popup.style.display = 'none');
+  };
+
+  togglePopUp();
 });
