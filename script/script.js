@@ -15,7 +15,7 @@ window.addEventListener("DOMContentLoaded", () => {
         minutes = Math.floor((timeRemaining / 60) % 60),
         hours = Math.floor(timeRemaining / 60 / 60);
       return { timeRemaining, hours, minutes, seconds };
-    }
+    };
 
     const getZero = (num) => {
       if (num >= 0 && num < 10) {
@@ -23,7 +23,7 @@ window.addEventListener("DOMContentLoaded", () => {
       } else {
         return num;
       }
-    }
+    };
 
     const timer = getTimeRemaining();
 
@@ -68,12 +68,32 @@ window.addEventListener("DOMContentLoaded", () => {
     const popup = document.querySelector('.popup');
     const popupBtns = document.querySelectorAll('.popup-btn');
     const popUpClose = document.querySelector('.popup-close');
+    const popUpContent = document.querySelector('.popup-content');
+
+    let count = 0;
+    const popUpAnimation = () => {
+      const timer = setInterval(() => {
+        count++;
+        if (count < 150) {
+          popUpContent.style.top = count + 'px';
+        } else {
+          clearInterval(timer);
+        }
+      }, 1);
+    };
 
     popupBtns.forEach((elem) => {
-      elem.addEventListener('click', () => popup.style.display = 'block');
+      elem.addEventListener('click', () => {
+        popup.style.display = 'block';
+        popUpAnimation();
+      });
     });
 
-    popUpClose.addEventListener('click', () => popup.style.display = 'none');
+    popUpClose.addEventListener('click', () => {
+      popup.style.display = 'none';
+      popUpContent.style.top = '0px';
+      count = 0;
+    });
   };
 
   togglePopUp();
