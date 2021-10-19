@@ -72,15 +72,21 @@ window.addEventListener("DOMContentLoaded", () => {
 
     let count = 0;
     const popUpAnimation = () => {
-      const timer = setInterval(() => {
-        count++;
-        if (count < 150) {
-          popUpContent.style.top = count + 'px';
-        } else {
-          clearInterval(timer);
-        }
-      }, 1);
+      if (screen.width < 768) {
+        popUpContent.style.top = '62px';
+        return;
+      } else {
+        const timer = setInterval(() => {
+          count++;
+          if (count < 100) {
+            popUpContent.style.top = count + 'px';
+          } else {
+            clearInterval(timer);
+          }
+        }, 1);
+      }
     };
+    console.log(screen.width);
 
     popupBtns.forEach((elem) => {
       elem.addEventListener('click', () => {
