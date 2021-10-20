@@ -47,8 +47,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const toggleMenu = () => {
     const btnMenu = document.querySelector('.menu');
     const menu = document.querySelector('menu');
-    const closebtn = document.querySelector('.close-btn');
-    const menuItems = menu.querySelectorAll('ul>li');
 
     const handlerMenu = () => {
       menu.classList.toggle('active-menu');
@@ -56,9 +54,13 @@ window.addEventListener("DOMContentLoaded", () => {
 
     btnMenu.addEventListener('click', handlerMenu);
 
-    closebtn.addEventListener('click', handlerMenu);
+    menu.addEventListener('click', (event) => {
+      let target = event.target;
 
-    menuItems.forEach((elem) => elem.addEventListener('click', handlerMenu));
+      if (target.classList.contains('close-btn') || target.tagName === 'A') {
+        handlerMenu();
+      }
+    });
   };
 
   toggleMenu();
@@ -67,7 +69,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const togglePopUp = () => {
     const popup = document.querySelector('.popup');
     const popupBtns = document.querySelectorAll('.popup-btn');
-    const popUpClose = document.querySelector('.popup-close');
     const popUpContent = document.querySelector('.popup-content');
 
     let count = 0;
@@ -86,7 +87,6 @@ window.addEventListener("DOMContentLoaded", () => {
         }, 1);
       }
     };
-    console.log(screen.width);
 
     popupBtns.forEach((elem) => {
       elem.addEventListener('click', () => {
@@ -95,10 +95,24 @@ window.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-    popUpClose.addEventListener('click', () => {
+    const popUpClose = () => {
       popup.style.display = 'none';
       popUpContent.style.top = '0px';
       count = 0;
+    };
+
+    popup.addEventListener('click', (event) => {
+      let target = event.target;
+
+      if (target.classList.contains('popup-close')) {
+        popUpClose();
+      } else {
+        target = target.closest('.popup-content');
+
+        if (!target) {
+          popUpClose();
+        }
+      }
     });
   };
 
@@ -121,4 +135,38 @@ window.addEventListener("DOMContentLoaded", () => {
   };
 
   smoothScrool();
+
+  // tabs
+  const tabs = () => {
+    const tabHeader = document.querySelector('.service-header');
+    const tab = tabHeader.querySelectorAll('.service-header-tab');
+    const tabContent = document.querySelectorAll('.service-tab');
+
+    const toggleTabContent = (index) => {
+      for (let i = 0; i < tabContent.length; i++) {
+        if (index === i) {
+          tab[i].classList.add('active');
+          tabContent[i].classList.remove('d-none');
+        } else {
+          tab[i].classList.remove('active');
+          tabContent[i].classList.add('d-none');
+        }
+      }
+    };
+
+    tabHeader.addEventListener('click', (event) => {
+      let target = event.target;
+      target = target.closest('.service-header-tab');
+      if (target) {
+        tab.forEach((item, i) => {
+          if (item === target) {
+            toggleTabContent(i);
+          }
+        });
+      }
+
+    });
+  };
+
+  tabs();
 });
