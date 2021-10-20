@@ -40,26 +40,27 @@ window.addEventListener("DOMContentLoaded", () => {
   };
 
   const updateClock = setInterval(() => {
-    countTimer("21 October 2021");
+    countTimer("24 October 2021");
   }, 10);
 
   // menu
   const toggleMenu = () => {
-    const btnMenu = document.querySelector('.menu');
     const menu = document.querySelector('menu');
 
     const handlerMenu = () => {
       menu.classList.toggle('active-menu');
     };
 
-    btnMenu.addEventListener('click', handlerMenu);
+    document.addEventListener('click', (event) => {
+      	let target = event.target;
 
-    menu.addEventListener('click', (event) => {
-      let target = event.target;
+        if (target.classList.contains('.close-btn') || target.tagName === 'A') {
+          console.log('qq');
+        } else if (target.closest('menu')) {
+          return;
+        }
 
-      if (target.classList.contains('close-btn') || target.tagName === 'A') {
         handlerMenu();
-      }
     });
   };
 
