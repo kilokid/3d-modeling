@@ -2,10 +2,15 @@ window.addEventListener("DOMContentLoaded", () => {
   "use strict";
 
   // Timer
+  function addZero(num) {
+    return String(num).length === 1 ? '0' + num : num;
+  }
+
   function countTimer(deadline) {
     const timerHours = document.querySelector("#timer-hours"),
       timerMinutes = document.querySelector("#timer-minutes"),
       timerSeconds = document.querySelector("#timer-seconds");
+    let timerInterval = null;
 
     function getTimeRemaining() {
       const dateStop = new Date(deadline).getTime(),
@@ -17,29 +22,27 @@ window.addEventListener("DOMContentLoaded", () => {
       return { timeRemaining, hours, minutes, seconds };
     }
 
-    function getZero(num) {
-      if (num >= 0 && num < 10) {
-        return "0" + num;
+    const updateTimer = () => {
+
+      const timer = getTimeRemaining();
+
+      if (timer.timeRemaining <= 0) {
+        if (!timerInterval) clearInterval(timerInterval);
+        timerHours.textContent = "00";
+        timerMinutes.textContent = "00";
+        timerSeconds.textContent = "00";
       } else {
-        return num;
+        timerHours.textContent = addZero(timer.hours);
+        timerMinutes.textContent = addZero(timer.minutes);
+        timerSeconds.textContent = addZero(timer.seconds);
       }
-    }
+    };
+    
+    updateTimer();
 
-    const timer = getTimeRemaining();
+    timerInterval = setInterval(updateTimer, 1000);
 
-    timerHours.textContent = getZero(timer.hours);
-    timerMinutes.textContent = getZero(timer.minutes);
-    timerSeconds.textContent = getZero(timer.seconds);
-
-    if (timer.timeRemaining <= 0) {
-      clearInterval(updateClock);
-      timerHours.textContent = "00";
-      timerMinutes.textContent = "00";
-      timerSeconds.textContent = "00";
-    }
   }
 
-  const updateClock = setInterval(() => {
-    countTimer("21 October 2021");
-  }, 10);
+  countTimer("21 October 2021");
 });
