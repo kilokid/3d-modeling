@@ -70,56 +70,57 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // popup window
   const togglePopUp = () => {
-    const popup = document.querySelector('.popup');
-    const popupBtns = document.querySelectorAll('.popup-btn');
-    const popUpContent = document.querySelector('.popup-content');
+		const popup = document.querySelector('.popup'),
+			popupBtn = document.querySelectorAll('.popup-btn'),
+			popupContent = document.querySelector('.popup-content'),
+			popupData = {
+				count: -445,
+				speed: 10,
+				startPos: -445,
+				endPos: 0
+			};
 
-    let count = 0;
-    const popUpAnimation = () => {
-      if (screen.width < 768) {
-        popUpContent.style.top = '62px';
-        return;
-      } else {
-        const timer = setInterval(() => {
-          count++;
-          if (count < 100) {
-            popUpContent.style.top = count + 'px';
-          } else {
-            clearInterval(timer);
-          }
-        }, 1);
-      }
-    };
+		const showPopup = () => {
 
-    popupBtns.forEach((elem) => {
-      elem.addEventListener('click', () => {
-        popup.style.display = 'block';
-        popUpAnimation();
-      });
-    });
+			popupData.startPos > popupData.endPos ?
+				popupData.count -= popupData.speed :
+				popupData.count += popupData.speed;
+			popupContent.style.transform = `translateY(${popupData.count}px)`;
 
-    const popUpClose = () => {
-      popup.style.display = 'none';
-      popUpContent.style.top = '0px';
-      count = 0;
-    };
+			if (popupData.startPos > popupData.endPos ?
+				popupData.count > popupData.endPos :
+				popupData.count < popupData.endPos) {
+				requestAnimationFrame(showPopup);
+			}
+		};
 
-    popup.addEventListener('click', (event) => {
-      let target = event.target;
+		popupBtn.forEach(elem => {
+			elem.addEventListener('click', () => {
+				popup.style.display = 'block';
+				if (screen.width > 768) {
+					popupData.count = popupData.startPos;
+					requestAnimationFrame(showPopup);
+				}
+			});
+		});
 
-      if (target.classList.contains('popup-close')) {
-        popUpClose();
-      } else {
-        target = target.closest('.popup-content');
+		popup.addEventListener('click', event => {
+			let target = event.target;
 
-        if (!target) {
-          popUpClose();
-        }
-      }
-    });
-  };
+			if (target.classList.contains('popup-close')) {
+				popup.style.display = 'none';
+			} else {
+				target = target.closest('.popup-content');
 
-  togglePopUp();
+				if (!target) {
+					popup.style.display = 'none';
+				}
+			}
+
+		});
+	};
+
+	togglePopUp();
 
   // smooth scrool
   const smoothScrool = () => {
