@@ -50,20 +50,37 @@ window.addEventListener("DOMContentLoaded", () => {
   const toggleMenu = () => {
     const menu = document.querySelector('menu');
 
-    const handlerMenu = () => {
-      menu.classList.toggle('active-menu');
+    const openMenu = () => {
+      menu.classList.add('active-menu');
+    };
+
+    const closeMenu = () => {
+      menu.classList.remove('active-menu');
     };
 
     document.addEventListener('click', (event) => {
       	let target = event.target;
 
-        if (target.classList.contains('.close-btn') || target.tagName === 'A') {
-          console.log('qq');
-        } else if (target.closest('menu')) {
-          return;
+        if (target.closest('.menu')) {
+          openMenu();
+        } else {
+          target = target.closest('.menu-active');
+          if (!target) {
+            closeMenu();
+          }
         }
 
-        handlerMenu();
+        // openMenu();
+        // menuHandler();
+        
+        // if (target.classList.contains('.close-btn') || target.tagName === 'A') {
+        //   menuHandler();
+        // } else if (target.closest('menu')) {
+        //   return;
+        // } else if (target.classList.contains('menu')) {
+
+        //   menuHandler();
+        // }
     });
   };
 
