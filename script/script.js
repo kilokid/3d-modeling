@@ -89,11 +89,13 @@ window.addEventListener("DOMContentLoaded", () => {
 				popupData.count += popupData.speed;
       popupContent.style.transform = `translateY(${popupData.count}px)`;
 
-			if (popupData.startPos > popupData.endPos ?
-				popupData.count > popupData.endPos :
-				popupData.count < popupData.endPos) {
-				requestAnimationFrame(showPopup);
-			}
+			if (popupData.startPos > popupData.endPos) {
+        return;
+      } else {
+        if (popupData.count < popupData.endPos) {
+          requestAnimationFrame(showPopup);
+        }
+      }
 		};
 
     const closePopup = () => {
@@ -107,14 +109,16 @@ window.addEventListener("DOMContentLoaded", () => {
       popupContent.style.transform = `translateY(${popupData.count}px)`;
 
 
-      if (popupData.startPos < popupData.endPos ?
-				popupData.count < popupData.endPos :
-				popupData.count > popupData.endPos) {
-          requestAnimationFrame(closePopup);
+      if (popupData.startPos > popupData.endPos) {
+        return;
       } else {
-        popupData.startPos = -445;
-        popupData.endPos = 50; 
-        popup.style.display = 'none';
+        if ((popupData.count < popupData.endPos)) {
+          requestAnimationFrame(closePopup);
+        } else {
+          popupData.startPos = -445;
+          popupData.endPos = 50;
+          popup.style.display = "none";
+        }
       }
     };
 
