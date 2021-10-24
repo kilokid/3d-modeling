@@ -44,24 +44,25 @@ window.addEventListener("DOMContentLoaded", () => {
 
   }
 
-  countTimer("23 October 2021");
+  countTimer("25 October 2021");
 
   // menu
   const toggleMenu = () => {
     const btnMenu = document.querySelector('.menu');
     const menu = document.querySelector('menu');
 
-    const handlerMenu = () => {
+    const menuHandler = () => {
       menu.classList.toggle('active-menu');
     };
 
-    btnMenu.addEventListener('click', handlerMenu);
+    btnMenu.addEventListener('click', menuHandler);
 
     menu.addEventListener('click', (event) => {
-      let target = event.target;
-
-      if (target.classList.contains('close-btn') || target.tagName === 'A') {
-        handlerMenu();
+      const target = event.target;
+      event.preventDefault();
+      
+      if (target.closest('close-btn') || target.classList.contains('js-menu-link')) {
+        menuHandler();
       }
     });
   };
