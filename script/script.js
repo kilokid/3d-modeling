@@ -42,7 +42,7 @@ window.addEventListener("DOMContentLoaded", () => {
     timerInterval = setInterval(updateTimer, 1000);
   }
 
-  countTimer("24 October 2021");
+  countTimer("25 October 2021");
 
   // menu
   const toggleMenu = () => {
@@ -62,9 +62,10 @@ window.addEventListener("DOMContentLoaded", () => {
       if (target.closest(".menu")) {
         openMenu();
       } else if (
-        target.classList.contains("close-btn") ||
-        target.tagName === "A"
+        target.closest(".close-btn") ||
+        target.classList.contains("js-menu-link")
       ) {
+        event.preventDefault();
         closeMenu();
       } else {
         const targetClick = target.closest("menu");
@@ -106,16 +107,15 @@ window.addEventListener("DOMContentLoaded", () => {
     };
 
     const closePopup = () => {
-      
       popupData.startPos > popupData.endPos
         ? (popupData.count -= popupData.speed)
         : (popupData.count += popupData.speed);
       popupContent.style.transform = `translateY(${popupData.count}px)`;
-      
+
       if (popupData.startPos > popupData.endPos) {
         return;
       } else {
-        if ((popupData.count < popupData.endPos)) {
+        if (popupData.count < popupData.endPos) {
           requestAnimationFrame(closePopup);
         } else {
           popupData.startPos = -445;
