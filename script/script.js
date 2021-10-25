@@ -319,9 +319,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // alternate team photo
   const teamPhotoSwitch = () => {
-    const commandPhoto = document.querySelectorAll('.command__photo');
+    const commandPhotos = document.querySelectorAll('.command__photo');
 
-    commandPhoto.forEach((photo) => {
+    commandPhotos.forEach((photo) => {
       const oldPhoto = photo.src;
       
       photo.addEventListener('mouseenter', (event) => {
@@ -336,9 +336,13 @@ window.addEventListener("DOMContentLoaded", () => {
   teamPhotoSwitch();
 
   // calculator validation
-
   const calculatorValidation = () => {
-
+    document.querySelectorAll('.calc-item').forEach(input => {
+      input.addEventListener('input', (event) => {
+        const target = event.target;
+        target.value = target.value.replace(/[^0-9.]/, '');
+      });
+    });
   };
 
   calculatorValidation();
