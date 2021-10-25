@@ -316,4 +316,30 @@ window.addEventListener("DOMContentLoaded", () => {
   };
 
   slider();
+
+  // alternate team photo
+  const teamPhotoSwitch = () => {
+    const commandPhoto = document.querySelectorAll('.command__photo');
+
+    commandPhoto.forEach((photo) => {
+      const oldPhoto = photo.src;
+      
+      photo.addEventListener('mouseenter', (event) => {
+        event.target.src = event.target.dataset.img;
+      });
+      photo.addEventListener('mouseleave', (event) => {
+        event.target.src = oldPhoto;
+      });
+    });
+  };
+
+  teamPhotoSwitch();
+
+  // calculator validation
+
+  const calculatorValidation = () => {
+
+  };
+
+  calculatorValidation();
 });
