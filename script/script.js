@@ -58,19 +58,19 @@ window.addEventListener("DOMContentLoaded", () => {
 
     document.addEventListener("click", (event) => {
       const target = event.target;
+      const openMenuBtn = target.closest('.menu');
+      const closeMenuBtn = target.closest('.close-btn');
+      const menuAnchorLinks = target.classList.contains('js-menu-link');
 
-      if (target.closest(".menu")) {
+      if (openMenuBtn) {
         openMenu();
-      } else if (
-        target.closest(".close-btn") ||
-        target.classList.contains("js-menu-link")
-      ) {
+      } else if (closeMenuBtn || menuAnchorLinks) {
         event.preventDefault();
         closeMenu();
       } else {
-        const targetClick = target.closest("menu");
+        const areaOutsideMenu = !target.closest("menu");
 
-        if (!targetClick) {
+        if (areaOutsideMenu) {
           closeMenu();
         }
       }
