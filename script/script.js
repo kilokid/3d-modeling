@@ -42,7 +42,7 @@ window.addEventListener("DOMContentLoaded", () => {
     timerInterval = setInterval(updateTimer, 1000);
   }
 
-  countTimer("25 October 2021");
+  countTimer("27 October 2021");
 
   // menu
   const toggleMenu = () => {
@@ -58,19 +58,19 @@ window.addEventListener("DOMContentLoaded", () => {
 
     document.addEventListener("click", (event) => {
       const target = event.target;
+      const openMenuBtn = target.closest('.menu');
+      const closeMenuBtn = target.closest('.close-btn');
+      const menuAnchorLinks = target.classList.contains('js-menu-link');
 
-      if (target.closest(".menu")) {
+      if (openMenuBtn) {
         openMenu();
-      } else if (
-        target.closest(".close-btn") ||
-        target.classList.contains("js-menu-link")
-      ) {
+      } else if (closeMenuBtn || menuAnchorLinks) {
         event.preventDefault();
         closeMenu();
       } else {
-        const targetClick = target.closest("menu");
+        const areaOutsideMenu = !target.closest("menu");
 
-        if (!targetClick) {
+        if (areaOutsideMenu) {
           closeMenu();
         }
       }
@@ -145,9 +145,9 @@ window.addEventListener("DOMContentLoaded", () => {
           ? requestAnimationFrame(closePopup)
           : (popup.style.display = "none");
       } else {
-        const targetClick = target.closest(".popup-content");
+        const popContentTarget = target.closest(".popup-content");
 
-        if (!targetClick) {
+        if (!popContentTarget) {
           screen.width > 768
             ? requestAnimationFrame(closePopup)
             : (popup.style.display = "none");
