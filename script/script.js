@@ -319,16 +319,18 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // alternate team photo
   const teamPhotoSwitch = () => {
-    const commandPhotos = document.querySelectorAll('.command__photo');
+    const commandWrapper = document.getElementById('command');
 
-    commandPhotos.forEach((photo) => {
-      const oldPhoto = photo.src;
-      
-      photo.addEventListener('mouseenter', (event) => {
-        event.target.src = event.target.dataset.img;
-      });
-      photo.addEventListener('mouseleave', (event) => {
-        event.target.src = oldPhoto;
+    commandWrapper.addEventListener('mouseover', (event) => {
+      const target = event.target;
+      const oldPhoto = target.src;
+
+      if (target.matches('.command__photo')) {
+        target.src = target.dataset.img;
+      }
+
+      commandWrapper.addEventListener('mouseout', () => {
+        target.src = oldPhoto;
       });
     });
   };
@@ -337,11 +339,14 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // calculator validation
   const calculatorValidation = () => {
-    document.querySelectorAll('.calc-item').forEach(input => {
-      input.addEventListener('input', (event) => {
-        const target = event.target;
+    const calcWrapper = document.getElementById('calc');
+
+    calcWrapper.addEventListener('input', (event) => {
+      const target = event.target;
+
+      if (target.type === 'text') {
         target.value = target.value.replace(/[^0-9.]/, '');
-      });
+      }
     });
   };
 
