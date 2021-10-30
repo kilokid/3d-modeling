@@ -42,7 +42,7 @@ window.addEventListener("DOMContentLoaded", () => {
     timerInterval = setInterval(updateTimer, 1000);
   }
 
-  countTimer("25 October 2021");
+  countTimer("31 October 2021");
 
   // menu
   const toggleMenu = () => {
@@ -320,19 +320,20 @@ window.addEventListener("DOMContentLoaded", () => {
   // alternate team photo
   const teamPhotoSwitch = () => {
     const commandWrapper = document.getElementById('command');
-
-    commandWrapper.addEventListener('mouseover', (event) => {
+    
+    const changingPhotos = (event) => {
       const target = event.target;
-      const oldPhoto = target.src;
 
-      if (target.matches('.command__photo')) {
+      if (target.classList.contains('command__photo')) {
+        const lastSrc = target.src;
+
         target.src = target.dataset.img;
+        target.dataset.img = lastSrc;
       }
+    };
 
-      commandWrapper.addEventListener('mouseout', () => {
-        target.src = oldPhoto;
-      });
-    });
+    commandWrapper.addEventListener('mouseover', changingPhotos);
+    commandWrapper.addEventListener('mouseout', changingPhotos);
   };
 
   teamPhotoSwitch();
@@ -348,6 +349,21 @@ window.addEventListener("DOMContentLoaded", () => {
         target.value = target.value.replace(/[^0-9.]/, '');
       }
     });
+
+    // calculator validation
+    const calculatorValidation = () => {
+      const calcWrapper = document.getElementById('calc');
+  
+      calcWrapper.addEventListener('input', (event) => {
+        const target = event.target;
+  
+        if (target.type === 'text') {
+          target.value = target.value.replace(/[^0-9.]/, '');
+        }
+      });
+    };
+  
+    calculatorValidation();
   };
 
   calculatorValidation();
