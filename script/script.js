@@ -42,7 +42,7 @@ window.addEventListener("DOMContentLoaded", () => {
     timerInterval = setInterval(updateTimer, 1000);
   }
 
-  countTimer("27 October 2021");
+  countTimer("1 November 2021");
 
   // menu
   const toggleMenu = () => {
@@ -317,35 +317,26 @@ window.addEventListener("DOMContentLoaded", () => {
 
   slider();
 
-  // alternate team photo
-  const teamPhotoSwitch = () => {
-    const commandPhotos = document.querySelectorAll('.command__photo');
+ // alternate team photo
+ const teamPhotoSwitch = () => {
+   const commandWrapper = document.getElementById("command");
 
-    commandPhotos.forEach((photo) => {
-      const oldPhoto = photo.src;
-      
-      photo.addEventListener('mouseenter', (event) => {
-        event.target.src = event.target.dataset.img;
-      });
-      photo.addEventListener('mouseleave', (event) => {
-        event.target.src = oldPhoto;
-      });
-    });
-  };
+   const changingPhotos = (event) => {
+     const target = event.target;
 
-  teamPhotoSwitch();
+     if (target.classList.contains("command__photo")) {
+       const lastSrc = target.src;
 
-  // calculator validation
-  const calculatorValidation = () => {
-    document.querySelectorAll('.calc-item').forEach(input => {
-      input.addEventListener('input', (event) => {
-        const target = event.target;
-        target.value = target.value.replace(/[^0-9.]/, '');
-      });
-    });
-  };
+       target.src = target.dataset.img;
+       target.dataset.img = lastSrc;
+     }
+   };
 
-  calculatorValidation();
+   commandWrapper.addEventListener("mouseover", changingPhotos);
+   commandWrapper.addEventListener("mouseout", changingPhotos);
+ };
+
+ teamPhotoSwitch();
 
   // calculator functional
   const calculator = (price = 100) => {
@@ -361,6 +352,7 @@ window.addEventListener("DOMContentLoaded", () => {
       let countValue = 1;
       let dayValue = 1;
       let step = 25;
+      let start = totalValue.textContent;
       const typeValue = calcType.options[calcType.selectedIndex].value;
       const squareValue = +calcSquare.value;
 
@@ -377,22 +369,28 @@ window.addEventListener("DOMContentLoaded", () => {
       if (typeValue && squareValue) {
         total = price * typeValue * squareValue * countValue * dayValue;
       }
+      
+      let timerInterval;
 
-      if (totalValue.textContent != total) {
-				if (totalValue.textContent > total) {
-					step = -25;
-				}
+      const numAnimate = () => {
+        
+        if (start < total) {
+          timerInterval = requestAnimationFrame(numAnimate);  
+        } else if (start > total) {
+          step = -25;
+          timerInterval = requestAnimationFrame(numAnimate);
+        }
+        totalValue.textContent = +totalValue.textContent + step;
 
-				let timer = setInterval(() => {
-					totalValue.textContent = +totalValue.textContent + step;
-					if ((total - totalValue.textContent) * step < 1) {
-						clearInterval(timer);
-						totalValue.textContent = Math.round(total);
-					}
-				}, 0);
-			}
+        if ((total - totalValue.textContent) * step < 1) {
+          cancelAnimationFrame(numAnimate);
+          start = totalValue.textContent;
+          totalValue.textContent = Math.round(total);
+        }
+      };
+
+      timerInterval = requestAnimationFrame(numAnimate);
 		};
-      // totalValue.textContent = total;
 
     calcBlock.addEventListener('change', (event) => {
       const target = event.target;
@@ -401,6 +399,18 @@ window.addEventListener("DOMContentLoaded", () => {
         countSum();
       }
     });
+
+    // calculator validation
+    const calculatorValidation = () => {
+      document.querySelectorAll('.calc-item').forEach(input => {
+        input.addEventListener('input', (event) => {
+          const target = event.target;
+          target.value = target.value.replace(/[^0-9.]/, '');
+        });
+      });
+    };
+
+    calculatorValidation();
   };
 
   calculator(100);
