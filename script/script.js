@@ -402,11 +402,12 @@ window.addEventListener("DOMContentLoaded", () => {
 
     // calculator validation
     const calculatorValidation = () => {
-      document.querySelectorAll('.calc-item').forEach(input => {
-        input.addEventListener('input', (event) => {
-          const target = event.target;
+      document.querySelector('.calc-block').addEventListener('input', (event) => {
+        const target = event.target;
+
+        if (target.type === 'text') {
           target.value = target.value.replace(/[^0-9.]/, '');
-        });
+        }
       });
     };
 
