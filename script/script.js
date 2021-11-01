@@ -42,7 +42,7 @@ window.addEventListener("DOMContentLoaded", () => {
     timerInterval = setInterval(updateTimer, 1000);
   }
 
-  countTimer("1 November 2021");
+  countTimer("3 November 2021");
 
   // menu
   const toggleMenu = () => {
@@ -415,4 +415,124 @@ window.addEventListener("DOMContentLoaded", () => {
   };
 
   calculator(100);
+
+    // send-ajax-form
+    const sendForm = (formSelector) => {
+      const errorMessage = 'Что-то пошло не так...',
+        loadMessage = 'Загрузка...',
+        successMessage = 'Спасибо, мы скоро с вами свяжемся!';
+  
+      const form = document.getElementById(formSelector);
+  
+      const statusMessage = document.createElement('div');
+      statusMessage.style.cssText = 'font-size: 2rem; color: white';
+      
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+  
+        form.append(statusMessage);
+        statusMessage.textContent = loadMessage;
+  
+        const formData = new FormData(form);
+        let body = {};
+        
+        formData.forEach((val, key) => {
+          body[key] = val;
+        });
+
+        const clearInputs = () => {
+          form.querySelectorAll('input').forEach(input => input.value = '');
+        };
+  
+        postdata(body, () => {
+          clearInputs();
+          statusMessage.textContent = successMessage;
+        }, (error) => {
+          statusMessage.textContent = errorMessage;
+          console.error(error);
+        });
+      });
+  
+      const postdata = (body, outputData, errorData) => {
+        const request = new XMLHttpRequest();
+  
+        request.addEventListener('readystatechange', () => {
+          if (request.readyState != 4) {
+            return;
+          }
+  
+          if (request.status === 200) {
+            outputData();
+          } else {
+            errorData(request.status);
+          }
+        });
+  
+        request.open('POST', './server.php');
+        request.setRequestHeader('Content-Type', 'application/json');
+  
+        request.send(JSON.stringify(body));
+      };
+    };
+
+    sendForm('form1');
+    sendForm('form2');
+    sendForm('form3');
+
+    // mask for phone valid
+    function maskPhone(input, masked = '+7 (___) ___-__-__') {
+    
+      function mask(event) {
+        const keyCode = event.keyCode;
+        const template = masked,
+          def = template.replace(/\D/g, ""),
+          val = this.value.replace(/\D/g, "");
+
+        let i = 0,
+          newValue = template.replace(/[_\d]/g, function (a) {
+            return i < val.length ? val.charAt(i++) || def.charAt(i) : a;
+          });
+        i = newValue.indexOf("_");
+        if (i != -1) {
+          newValue = newValue.slice(0, i);
+        }
+        let reg = template.substr(0, this.value.length).replace(/_+/g,
+          function (a) {
+            return "\\d{1," + a.length + "}";
+          }).replace(/[+()]/g, "\\$&");
+        reg = new RegExp("^" + reg + "$");
+        if (!reg.test(this.value) || this.value.length < 5 || keyCode > 47 && keyCode < 58) {
+          this.value = newValue;
+        }
+        if (event.type == "blur" && this.value.length < 5) {
+          this.value = "";
+        }
+    
+      }
+
+      input.addEventListener("input", mask);
+      input.addEventListener("focus", mask);
+      input.addEventListener("blur", mask);
+      
+    }
+
+    // validation form phone inputs
+    const validFormInputs = (formSelector) => {
+      const form = document.getElementById(formSelector);
+      const formInputs = form.querySelectorAll('input');
+
+      formInputs.forEach((input) => {
+        if (input.classList.contains('form-phone')) {
+          maskPhone(input);
+        } else if (input.classList.contains('form-name') || input.placeholder === 'Ваше имя') {
+          input.addEventListener('input', () => {
+            input.value = input.value.replace(/[^а-яА-ЯёЁ ]+$/gi, '');
+          });
+        }
+      });
+    };
+
+    validFormInputs('form1');
+    validFormInputs('form2');
+    validFormInputs('form3');
 });
