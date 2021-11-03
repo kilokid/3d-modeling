@@ -42,7 +42,7 @@ window.addEventListener("DOMContentLoaded", () => {
     timerInterval = setInterval(updateTimer, 1000);
   }
 
-  countTimer("3 November 2021");
+  countTimer("4 November 2021");
 
   // menu
   const toggleMenu = () => {
@@ -417,37 +417,34 @@ window.addEventListener("DOMContentLoaded", () => {
   calculator(100);
 
     // send-ajax-form
-    const sendForm = (formSelector) => {
+
+    const sendForm = () => {
       const errorMessage = 'Что-то пошло не так...',
         loadMessage = 'Загрузка...',
         successMessage = 'Спасибо, мы скоро с вами свяжемся!';
   
-      const form = document.getElementById(formSelector);
-  
       const statusMessage = document.createElement('div');
       statusMessage.style.cssText = 'font-size: 2rem; color: white';
       
-      form.addEventListener('submit', (event) => {
+      document.addEventListener('submit', (event) => {
         event.preventDefault();
+        const target = event.target;
   
-        form.append(statusMessage);
+        target.append(statusMessage);
         statusMessage.textContent = loadMessage;
   
-        const formData = new FormData(form);
-        let body = {};
+        const formData = new FormData(target);
+        const body = {};
         
         formData.forEach((val, key) => {
           body[key] = val;
         });
-
-        const clearInputs = () => {
-          form.querySelectorAll('input').forEach(input => input.value = '');
-        };
   
         postdata(body, () => {
-          clearInputs();
+          target.querySelectorAll('input').forEach(input => input.value = '');
           statusMessage.textContent = successMessage;
         }, (error) => {
+          target.querySelectorAll('input').forEach(input => input.value = '');
           statusMessage.textContent = errorMessage;
           console.error(error);
         });
@@ -475,21 +472,19 @@ window.addEventListener("DOMContentLoaded", () => {
       };
     };
 
-    sendForm('form1');
-    sendForm('form2');
-    sendForm('form3');
+    sendForm();
 
     // mask for phone valid
-    function maskPhone(input, masked = '+7 (___) ___-__-__') {
-    
-      function mask(event) {
+    const maskPhone = (input, masked = '+7 (___) ___-__-__') => {
+
+        function mask(event) {
         const keyCode = event.keyCode;
         const template = masked,
           def = template.replace(/\D/g, ""),
           val = this.value.replace(/\D/g, "");
 
         let i = 0,
-          newValue = template.replace(/[_\d]/g, function (a) {
+          newValue = template.replace(/[_\d]/g, (a) => {
             return i < val.length ? val.charAt(i++) || def.charAt(i) : a;
           });
         i = newValue.indexOf("_");
@@ -497,7 +492,7 @@ window.addEventListener("DOMContentLoaded", () => {
           newValue = newValue.slice(0, i);
         }
         let reg = template.substr(0, this.value.length).replace(/_+/g,
-          function (a) {
+          (a) => {
             return "\\d{1," + a.length + "}";
           }).replace(/[+()]/g, "\\$&");
         reg = new RegExp("^" + reg + "$");
@@ -514,25 +509,25 @@ window.addEventListener("DOMContentLoaded", () => {
       input.addEventListener("focus", mask);
       input.addEventListener("blur", mask);
       
-    }
-
-    // validation form phone inputs
-    const validFormInputs = (formSelector) => {
-      const form = document.getElementById(formSelector);
-      const formInputs = form.querySelectorAll('input');
-
-      formInputs.forEach((input) => {
-        if (input.classList.contains('form-phone')) {
-          maskPhone(input);
-        } else if (input.classList.contains('form-name') || input.placeholder === 'Ваше имя') {
-          input.addEventListener('input', () => {
-            input.value = input.value.replace(/[^а-яА-ЯёЁ ]+$/gi, '');
-          });
-        }
-      });
     };
 
-    validFormInputs('form1');
-    validFormInputs('form2');
-    validFormInputs('form3');
+    // validation form phone & name inputs
+    const validFormInputs = () => {
+      const forms = document.querySelectorAll('[name="user_form"]');
+      forms.forEach((form) => {
+        const formPhoneInput = form.querySelector('.form-phone');
+        maskPhone(formPhoneInput);
+      });
+      
+      document.addEventListener('input', (event) => {
+        const target = event.target;
+
+        if (target.closest('.form-name') || target.placeholder === 'Ваше имя') {
+          target.value = target.value.replace(/[^а-яё ]+$/gi, '');
+        }
+      });
+
+    };
+
+    validFormInputs();
 });
