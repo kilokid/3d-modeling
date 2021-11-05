@@ -42,7 +42,7 @@ window.addEventListener("DOMContentLoaded", () => {
     timerInterval = setInterval(updateTimer, 1000);
   }
 
-  countTimer("4 November 2021");
+  countTimer("6 November 2021");
 
   // menu
   const toggleMenu = () => {
@@ -416,118 +416,120 @@ window.addEventListener("DOMContentLoaded", () => {
 
   calculator(100);
 
-    // send-ajax-form
+  // send-ajax-form
+  const sendForm = () => {
+    const errorMessage = 'Что-то пошло не так...',
+      loadMessage = 'Загрузка...',
+      successMessage = 'Спасибо, мы скоро с вами свяжемся!';
 
-    const sendForm = () => {
-      const errorMessage = 'Что-то пошло не так...',
-        loadMessage = 'Загрузка...',
-        successMessage = 'Спасибо, мы скоро с вами свяжемся!';
-  
-      const statusMessage = document.createElement('div');
-      statusMessage.style.cssText = 'font-size: 2rem; color: white';
+    const statusMessage = document.createElement('div');
+    statusMessage.style.cssText = 'font-size: 2rem; color: white';
+    
+    document.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const target = event.target;
+
+      target.append(statusMessage);
+      statusMessage.textContent = loadMessage;
+
+      const formData = new FormData(target);
+      const body = {};
       
-      document.addEventListener('submit', (event) => {
-        event.preventDefault();
-        const target = event.target;
-  
-        target.append(statusMessage);
-        statusMessage.textContent = loadMessage;
-  
-        const formData = new FormData(target);
-        const body = {};
-        
-        formData.forEach((val, key) => {
-          body[key] = val;
-        });
-  
-        postdata(body, () => {
+      formData.forEach((val, key) => {
+        body[key] = val;
+      });
+
+      postData(body)
+        .then(() => {
           target.querySelectorAll('input').forEach(input => input.value = '');
           statusMessage.textContent = successMessage;
-        }, (error) => {
+        })
+        .catch(error => {
           target.querySelectorAll('input').forEach(input => input.value = '');
           statusMessage.textContent = errorMessage;
           console.error(error);
         });
-      });
-  
-      const postdata = (body, outputData, errorData) => {
+    });
+
+    const postData = (body) => {
+      return new Promise((resolve, reject) => {
         const request = new XMLHttpRequest();
-  
+        request.open('POST', './server.php');
+        request.setRequestHeader('Content-Type', 'application/json');
+
         request.addEventListener('readystatechange', () => {
           if (request.readyState != 4) {
             return;
           }
   
           if (request.status === 200) {
-            outputData();
+            resolve(request);
           } else {
-            errorData(request.status);
+            reject(new Error(request));
           }
         });
   
-        request.open('POST', './server.php');
-        request.setRequestHeader('Content-Type', 'application/json');
-  
         request.send(JSON.stringify(body));
-      };
+      });
     };
+  };
 
-    sendForm();
+  sendForm();
 
-    // mask for phone valid
-    const maskPhone = (input, masked = '+7 (___) ___-__-__') => {
+  // mask for phone valid
+  const maskPhone = (input, masked = '+7 (___) ___-__-__') => {
 
-        function mask(event) {
-        const keyCode = event.keyCode;
-        const template = masked,
-          def = template.replace(/\D/g, ""),
-          val = this.value.replace(/\D/g, "");
+      function mask(event) {
+      const keyCode = event.keyCode;
+      const template = masked,
+        def = template.replace(/\D/g, ""),
+        val = this.value.replace(/\D/g, "");
 
-        let i = 0,
-          newValue = template.replace(/[_\d]/g, (a) => {
-            return i < val.length ? val.charAt(i++) || def.charAt(i) : a;
-          });
-        i = newValue.indexOf("_");
-        if (i != -1) {
-          newValue = newValue.slice(0, i);
-        }
-        let reg = template.substr(0, this.value.length).replace(/_+/g,
-          (a) => {
-            return "\\d{1," + a.length + "}";
-          }).replace(/[+()]/g, "\\$&");
-        reg = new RegExp("^" + reg + "$");
-        if (!reg.test(this.value) || this.value.length < 5 || keyCode > 47 && keyCode < 58) {
-          this.value = newValue;
-        }
-        if (event.type == "blur" && this.value.length < 5) {
-          this.value = "";
-        }
-    
+      let i = 0,
+        newValue = template.replace(/[_\d]/g, (a) => {
+          return i < val.length ? val.charAt(i++) || def.charAt(i) : a;
+        });
+      i = newValue.indexOf("_");
+      if (i != -1) {
+        newValue = newValue.slice(0, i);
       }
+      let reg = template.substr(0, this.value.length).replace(/_+/g,
+        (a) => {
+          return "\\d{1," + a.length + "}";
+        }).replace(/[+()]/g, "\\$&");
+      reg = new RegExp("^" + reg + "$");
+      if (!reg.test(this.value) || this.value.length < 5 || keyCode > 47 && keyCode < 58) {
+        this.value = newValue;
+      }
+      if (event.type == "blur" && this.value.length < 5) {
+        this.value = "";
+      }
+  
+    }
 
-      input.addEventListener("input", mask);
-      input.addEventListener("focus", mask);
-      input.addEventListener("blur", mask);
-      
-    };
+    input.addEventListener("input", mask);
+    input.addEventListener("focus", mask);
+    input.addEventListener("blur", mask);
+    
+  };
 
-    // validation form phone & name inputs
-    const validFormInputs = () => {
-      const forms = document.querySelectorAll('[name="user_form"]');
-      forms.forEach((form) => {
-        const formPhoneInput = form.querySelector('.form-phone');
-        maskPhone(formPhoneInput);
-      });
-      
-      document.addEventListener('input', (event) => {
-        const target = event.target;
+  // validation form phone & name inputs
+  const validFormInputs = () => {
+    const forms = document.querySelectorAll('[name="user_form"]');
+    forms.forEach((form) => {
+      const formPhoneInput = form.querySelector('.form-phone');
+      maskPhone(formPhoneInput);
+    });
+    
+    document.addEventListener('input', (event) => {
+      const target = event.target;
 
-        if (target.closest('.form-name') || target.placeholder === 'Ваше имя') {
-          target.value = target.value.replace(/[^а-яё ]+$/gi, '');
-        }
-      });
+      if (target.closest('.form-name') || target.placeholder === 'Ваше имя') {
+        target.value = target.value.replace(/[^а-яё ]+$/gi, '');
+      }
+    });
 
-    };
+  };
 
-    validFormInputs();
+  validFormInputs();
 });
