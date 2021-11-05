@@ -438,9 +438,13 @@ window.addEventListener("DOMContentLoaded", () => {
       formData.forEach((val, key) => {
         body[key] = val;
       });
+      console.log(body);
 
       postData(body)
-        .then(() => {
+        .then((response) => {
+          if (response.status !== 200) {
+            throw new Error('Status network not 200');
+          }
           target.querySelectorAll('input').forEach(input => input.value = '');
           statusMessage.textContent = successMessage;
         })
@@ -452,24 +456,12 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 
     const postData = (body) => {
-      return new Promise((resolve, reject) => {
-        const request = new XMLHttpRequest();
-        request.open('POST', './server.php');
-        request.setRequestHeader('Content-Type', 'application/json');
-
-        request.addEventListener('readystatechange', () => {
-          if (request.readyState != 4) {
-            return;
-          }
-  
-          if (request.status === 200) {
-            resolve(request);
-          } else {
-            reject(new Error(request));
-          }
-        });
-  
-        request.send(JSON.stringify(body));
+      return fetch('./server.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
       });
     };
   };
