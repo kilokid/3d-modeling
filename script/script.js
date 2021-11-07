@@ -449,7 +449,6 @@ window.addEventListener("DOMContentLoaded", () => {
           statusMessage.textContent = successMessage;
         })
         .catch(error => {
-          target.querySelectorAll('input').forEach(input => input.value = '');
           statusMessage.textContent = errorMessage;
           console.error(error);
         });
