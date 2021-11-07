@@ -444,7 +444,6 @@ window.addEventListener("DOMContentLoaded", () => {
           target.querySelectorAll('input').forEach(input => input.value = '');
           statusMessage.textContent = successMessage;
         }, (error) => {
-          target.querySelectorAll('input').forEach(input => input.value = '');
           statusMessage.textContent = errorMessage;
           console.error(error);
         });
