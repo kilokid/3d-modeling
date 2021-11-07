@@ -442,8 +442,10 @@ window.addEventListener("DOMContentLoaded", () => {
   
         postdata(body, () => {
           target.querySelectorAll('input').forEach(input => input.value = '');
+          statusMessage.style.color = 'green';
           statusMessage.textContent = successMessage;
         }, (error) => {
+          statusMessage.style.color = 'red';
           statusMessage.textContent = errorMessage;
           console.error(error);
         });
@@ -523,9 +525,10 @@ window.addEventListener("DOMContentLoaded", () => {
 
         if (target.closest('.form-name') || target.placeholder === 'Ваше имя') {
           target.value = target.value.replace(/[^а-яё ]+$/gi, '');
+        } else if (target.closest('.form-email')) {
+          target.value = target.value.replace(/[^a-z0-9@.]+$/gi, '');
         }
       });
-
     };
 
     validFormInputs();
