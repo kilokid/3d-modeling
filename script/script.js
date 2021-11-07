@@ -446,9 +446,11 @@ window.addEventListener("DOMContentLoaded", () => {
             throw new Error('Status network not 200');
           }
           target.querySelectorAll('input').forEach(input => input.value = '');
+          statusMessage.style.color = 'green';
           statusMessage.textContent = successMessage;
         })
         .catch(error => {
+          statusMessage.style.color = 'red';
           statusMessage.textContent = errorMessage;
           console.error(error);
         });
