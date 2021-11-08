@@ -1,3 +1,7 @@
+const addZero = (num) => {
+    return String(num).length === 1 ? "0" + num : num;      
+};
+
 const countTimer = (deadline) => {
     const timerHours = document.querySelector("#timer-hours"),
         timerMinutes = document.querySelector("#timer-minutes"),

@@ -1,5 +1,13 @@
 "use strict";
 
+import '@babel/polyfill';
+import 'formdata-polyfill';
+import 'es6-promise';
+import 'fetch-polyfill';
+import 'nodelist-foreach-polyfill';
+import elementClosest from 'element-closest';
+elementClosest(window);
+
 import countTimer from './modules/countTimer';
 import toggleMenu from './modules/toggleMenu';
 import togglePopUp from './modules/togglePopUp';
@@ -11,7 +19,7 @@ import calculator from './modules/calc';
 import sendForm from './modules/sendForm';
 import validFormInputs from './modules/validFormInputs';
 
-countTimer("6 November 2021");
+countTimer("9 November 2021");
 toggleMenu();
 togglePopUp();
 smoothScrool();

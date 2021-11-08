@@ -1,6 +1,6 @@
 const path = require('path');
 
-module.export = {
+module.exports = {
     entry: {
         main: './src/index.js'
     },
@@ -8,5 +8,17 @@ module.export = {
         path: path.resolve(__dirname, './dist'),
         filename: '[name].js',
         publicPath: '/dist'
+    },
+    devServer: {
+        static: __dirname,
+    },
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                loader: 'babel-loader',
+                exclude: '/not_modules/'
+            }
+        ]
     }
 };
