@@ -19,7 +19,9 @@ import calculator from './modules/calc';
 import sendForm from './modules/sendForm';
 import validFormInputs from './modules/validFormInputs';
 
-countTimer("9 November 2021");
+import sliderCarousel from '../plugins/sliderCarousel/sliderCarousel';
+
+countTimer("12 November 2021");
 toggleMenu();
 togglePopUp();
 smoothScrool();
@@ -29,3 +31,26 @@ teamPhotoSwitch();
 calculator(100);
 sendForm();
 validFormInputs();
+
+const carousel = new sliderCarousel({
+    main: '.companies-wrapper',
+    wrap: '.companies-hor',
+    // prev: '#test-left',
+    // next: '#test-right',
+    slidesToShow: 4,
+    infinity: true,
+
+    responsive: [{
+        breakpoint: 1024,
+        slideToShow: 3
+    },
+    {
+        breakpoint: 768,
+        slideToShow: 2
+    },
+    {
+        breakpoint: 576,
+        slideToShow: 1
+    }]
+});
+carousel.init();
