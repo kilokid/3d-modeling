@@ -66,6 +66,11 @@ export default class sliderCarousel {
                 justify-content: center !important;
                 flex: 0 0 ${this.options.widthSlide}% !important;
                 margin: auto 0 !important;
+                opacity: 1;
+                transition: all ease 1s;
+            }
+            .glo-slider__item .opacity--0 {
+                opacity: 0;
             }
             .glo-slider__prev,
             .glo-slider__next {
@@ -110,7 +115,7 @@ export default class sliderCarousel {
         if (this.options.infinity || this.options.position < this.options.maxPosition) {
             ++this.options.position;
             if (this.options.position > this.options.maxPosition) {
-              this.options.position = 0;  
+                this.options.position = 0;
             }
             this.wrap.style.transform = `translateX(-${this.options.position * this.options.widthSlide}%)`;
         }

@@ -21,7 +21,7 @@ import validFormInputs from './modules/validFormInputs';
 
 import sliderCarousel from '../plugins/sliderCarousel/sliderCarousel';
 
-countTimer("12 November 2021");
+countTimer("14 November 2021");
 toggleMenu();
 togglePopUp();
 smoothScrool();
